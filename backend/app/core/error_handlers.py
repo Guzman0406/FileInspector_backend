@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
+from slowapi.errors import RateLimitExceeded
 
 from app.core.exceptions import AppError
 from app.core.responses import error_response
@@ -27,6 +28,14 @@ async def validation_error_handler(request: Request, exc: RequestValidationError
     )
 
 
+async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
+    return error_response(
+        code="RATE_LIMITED",
+        message="Has hecho demasiadas peticiones. Espere un momento e intente nuevamente",
+        status_code=429,
+    )
+
+
 async def unhandled_exception_handler(request: Request, exc: Exception):
     return error_response(
         code="INTERNAL_ERROR",
@@ -38,4 +47,5 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
 def register_error_handlers(app: FastAPI) -> None:
     app.add_exception_handler(AppError, app_error_handler)
     app.add_exception_handler(RequestValidationError, validation_error_handler)
+    app.add_exception_handler(RateLimitExceeded, rate_limit_handler)
     app.add_exception_handler(Exception, unhandled_exception_handler)
