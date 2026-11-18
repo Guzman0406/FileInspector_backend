@@ -8,6 +8,8 @@ from app.core.error_handlers import register_error_handlers
 from app.core.limiter import limiter
 from app.modules.audit.models import AuditLog  # noqa: F401 
 from app.modules.exif.router import router as exif_router
+from app.modules.hash.router import router as hash_router
+
 
 # Limite de pixeles para evitar "bombas de imagen" 
 Image.MAX_IMAGE_PIXELS = 50_000_000
@@ -30,6 +32,7 @@ app = FastAPI(
 app.state.limiter = limiter
 register_error_handlers(app)
 app.include_router(exif_router)
+app.include_router(hash_router)
 
 
 @app.get("/health", tags=["Health"])

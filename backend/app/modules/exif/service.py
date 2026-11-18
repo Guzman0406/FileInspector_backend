@@ -6,6 +6,7 @@ import logging
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
+from app.core.shared import tamano_base64_estimado
 from app.core.exceptions import (
     FileTooLargeError,
     InvalidBase64Error,
@@ -21,14 +22,8 @@ logger = logging.getLogger(__name__)
 FORMATOS_SOPORTADOS = {"image/jpeg", "image/png", "image/tiff", "image/heic", "image/heif"}
 
 
-def _tamano_base64_estimado(texto_base64: str) -> int:
-    # Poder rechazar el archivo si pesa mas de lo previsto
-    relleno = texto_base64.count("=")
-    return (len(texto_base64) * 3) // 4 - relleno
-
-
 async def procesar_exif(db: AsyncSession, datos: ExifRequest) -> dict:
-    tamano_estimado = _tamano_base64_estimado(datos.file_base64)
+    tamano_estimado = tamano_base64_estimado(datos.file_base64)
 
 # El arvchivo es mas grande de lo compatible 
 # Sino es compatible se guarda en la auditoria
