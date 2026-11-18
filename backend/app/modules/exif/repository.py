@@ -92,8 +92,12 @@ def extraer_exif(contenido: bytes) -> dict:
         exif_dict = piexif.load(exif_bytes)
 
         # Por cada bloque y cada etiqueta
+        TAGS_PUNTERO = {piexif.ImageIFD.ExifTag, piexif.ImageIFD.GPSTag}
+
         for ifd_name in ("0th", "Exif", "1st"):
             for tag_id, valor in exif_dict.get(ifd_name, {}).items():
+                if ifd_name == "0th" and tag_id in TAGS_PUNTERO:
+                    continue
                 nombre = _tag_name(ifd_name, tag_id)
                 campos.append({
                     "tag": nombre,
