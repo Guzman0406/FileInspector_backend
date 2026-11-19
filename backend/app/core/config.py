@@ -1,3 +1,5 @@
+# Definimos el tamaño de archivos soportados 
+# para no saturar las cargas
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -5,9 +7,11 @@ class Settings(BaseSettings):
     app_env: str = "development"
     debug: bool = False
 
-    database_url: str 
+    database_url: str #sino hay base truena
 
+    # tamaño en byetes
     max_size_exif: int = 10 * 1024 * 1024
+    max_size_mime: int = 10 * 1024 * 1024
     max_size_cleaner: int = 10 * 1024 * 1024
     max_size_hash: int = 50 * 1024 * 1024
     max_size_comparator: int = 20 * 1024 * 1024
