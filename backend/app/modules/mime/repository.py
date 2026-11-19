@@ -54,7 +54,7 @@ def _tiene_doble_extension(filename: str) -> bool:
 
 def _refinar_office(contenido: bytes, detected: str) -> str:
     """Si el magic byte dice 'zip', revisamos adentro para ver si es
-    en realidad un docx/xlsx/pptx (todos son ZIP por dentro)."""
+    en realidad un docx/xlsx/pptx"""
     if detected != "application/zip":
         return detected
 

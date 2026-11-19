@@ -9,6 +9,7 @@ from app.core.limiter import limiter
 from app.modules.audit.models import AuditLog  # noqa: F401 
 from app.modules.exif.router import router as exif_router
 from app.modules.hash.router import router as hash_router
+from app.modules.mime.router import router as mime_router
 
 
 # Limite de pixeles para evitar "bombas de imagen" 
@@ -33,6 +34,7 @@ app.state.limiter = limiter
 register_error_handlers(app)
 app.include_router(exif_router)
 app.include_router(hash_router)
+app.include_router(mime_router)
 
 
 @app.get("/health", tags=["Health"])
