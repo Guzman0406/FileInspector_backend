@@ -11,6 +11,7 @@ from app.modules.exif.router import router as exif_router
 from app.modules.hash.router import router as hash_router
 from app.modules.mime.router import router as mime_router
 from app.modules.compare.router import router as compare_router
+from app.modules.clean.router import router as clean_router
 
 
 # Limite de pixeles para evitar "bombas de imagen" 
@@ -37,6 +38,7 @@ app.include_router(exif_router)
 app.include_router(hash_router)
 app.include_router(mime_router)
 app.include_router(compare_router)
+app.include_router(clean_router)
 
 
 @app.get("/health", tags=["Health"])
