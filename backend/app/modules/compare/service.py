@@ -11,11 +11,11 @@ from app.modules.compare.repository import comparar_archivos
 from app.modules.compare.schemas import CompareRequest
 
 
-async def procesar_comparacion(datos: CompareRequest, db: AsyncSession) -> dict:
+async def procesar_comparacion(db: AsyncSession, datos: CompareRequest) -> dict:
     tamano_estimado_a = tamano_base64_estimado(datos.file_base64_a)
     tamano_estimado_b = tamano_base64_estimado(datos.file_base64_b)
 
-    if tamano_estimado_a > settings.max_size_compare or tamano_estimado_b > settings.max_size_compare:
+    if tamano_estimado_a > settings.max_size_comparator or tamano_estimado_b > settings.max_size_comparator:
         await log_audit(
             db,
             module="compare",
@@ -24,7 +24,7 @@ async def procesar_comparacion(datos: CompareRequest, db: AsyncSession) -> dict:
             success=False,
             error_code="FILE_TOO_LARGE",
         )
-        raise FileTooLargeError()
+        raise FileTooLargeError("Uno de los archivos excede el tamaño máximo permitido para comparar (20MB)")
 
     try:
         contenido_a = base64.b64decode(datos.file_base64_a, validate=True)
@@ -38,7 +38,18 @@ async def procesar_comparacion(datos: CompareRequest, db: AsyncSession) -> dict:
             success=False,
             error_code="INVALID_BASE64",
         )
-        raise InvalidBase64Error()
+        raise InvalidBase64Error("Alguno de los archivos enviados no es Base64 válido")
+
+    if len(contenido_a) > settings.max_size_comparator or len(contenido_b) > settings.max_size_comparator:
+        await log_audit(
+            db,
+            module="compare",
+            file_size_bytes=max(len(contenido_a), len(contenido_b)),
+            file_type=None,
+            success=False,
+            error_code="FILE_TOO_LARGE",
+        )
+        raise FileTooLargeError("Uno de los archivos excede el tamaño máximo permitido para comparar (20MB)")
 
     resultado = comparar_archivos(contenido_a, contenido_b)
 

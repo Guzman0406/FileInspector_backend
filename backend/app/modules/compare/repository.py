@@ -1,4 +1,4 @@
-from app.core.base_model import LIMITE_DIFERENCIAS
+from app.core.config import settings
 
 """
     recorrer ambos archivos byte por byte y
@@ -21,7 +21,7 @@ def comparar_archivos(contenido_a: bytes, contenido_b: bytes) -> dict:
 
         if byte_a != byte_b:
             total_differences += 1
-            if len(diferencias) < LIMITE_DIFERENCIAS:
+            if len(diferencias) < settings.compare_diff_limit:
                 diferencias.append({
                     "position": posicion,
                     "value_a": byte_a,
@@ -33,6 +33,6 @@ def comparar_archivos(contenido_a: bytes, contenido_b: bytes) -> dict:
         "size_b": tamano_b,
         "identical": total_differences == 0,
         "total_differences": total_differences,
-        "truncated": total_differences > LIMITE_DIFERENCIAS,
+        "truncated": total_differences > settings.compare_diff_limit,
         "differences": diferencias,
     }
