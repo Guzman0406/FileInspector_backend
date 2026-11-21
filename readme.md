@@ -40,4 +40,39 @@ Muchos archivos que se comparten a diario (fotos, documentos) contienen metadato
 ```bash
 git clone https://github.com/Guzman0406/Fileinspector
 cd Fileinspector
-...
+```
+
+### Configurar variables de entorno
+Dentro de `backend/`, crea un archivo `.env` con la conexión a la base de datos:
+```bash
+DATABASE_URL=postgresql+asyncpg://fileinspector:fileinspector_dev_pass@db:5432/fileinspector_db
+```
+
+### Levantar el proyecto con Docker
+```bash
+docker compose up -d --build
+```
+La API queda disponible en `http://localhost:8003`, con documentación interactiva (Swagger) en `http://localhost:8003/docs`.
+
+### Correr las pruebas automatizadas
+```bash
+docker compose exec api python -m pytest -v
+```
+---
+
+## Despliegue
+El backend está desplegado públicamente en Render:
+* **URL base:** https://fileinspector-backend.onrender.com
+* **Documentación interactiva (Swagger):** https://fileinspector-backend.onrender.com/docs
+
+## Endpoints Principales
+| Método | Ruta | Descripción |
+|---|---|---|
+| POST | `/api/v1/exif` | Extrae metadatos EXIF de una imagen (cámara, fecha, GPS) |
+| POST | `/api/v1/clean` | Elimina metadatos de una imagen JPEG/PNG sin recomprimirla |
+| POST | `/api/v1/mime` | Detecta el tipo real de un archivo y lo compara contra su extensión |
+| POST | `/api/v1/hash` | Calcula MD5, SHA-1, SHA-256 y SHA-512 de un archivo |
+| POST | `/api/v1/compare` | Compara dos archivos byte a byte y muestra sus diferencias |
+| GET | `/health` | Verifica que la API esté activa |
+---
+
