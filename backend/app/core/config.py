@@ -16,6 +16,9 @@ class Settings(BaseSettings):
     max_size_hash: int = 50 * 1024 * 1024
     max_size_comparator: int = 20 * 1024 * 1024
 
+    # usado para las diferencias en el modulo compare
+    compare_diff_limit: int = 20
+
     rate_limit_default: str = "30/minute"
 
     model_config = SettingsConfigDict(

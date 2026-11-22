@@ -7,7 +7,7 @@ sqlalchemy[asyncio]==2.0.36
 asyncpg==0.30.0
 alembic==1.14.0
 
-# -validaciones
+# validaciones
 pydantic==2.10.4
 pydantic-settings==2.7.0
 
@@ -27,3 +27,8 @@ numpy==2.2.1
 slowapi==0.1.9
 
 python-multipart==0.0.20
+
+# testing
+pytest==8.3.4
+pytest-asyncio==0.25.0
+httpx==0.28.1
