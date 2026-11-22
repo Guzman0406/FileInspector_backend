@@ -26,3 +26,9 @@ class UnsupportedFormatError(AppError):
 class ProcessingTimeoutError(AppError):
     status_code = 504
     code = "PROCESSING_TIMEOUT"
+
+
+class UnauthorizedError(AppError):
+    status_code = 401
+    code = "UNAUTHORIZED"
+

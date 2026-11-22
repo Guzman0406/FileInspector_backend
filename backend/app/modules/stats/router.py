@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import get_db
 from app.core.limiter import limiter
 from app.core.responses import success_response
+from app.modules.auth.service import obtener_admin_actual
 from app.modules.stats.service import (
     obtener_errores_comunes,
     obtener_peticiones_por_modulo,
@@ -11,7 +12,11 @@ from app.modules.stats.service import (
     obtener_tasa_exito,
 )
 
-router = APIRouter(prefix="/api/v1/stats", tags=["Stats"])
+router = APIRouter(
+    prefix="/api/v1/stats",
+    tags=["Stats"],
+    dependencies=[Depends(obtener_admin_actual)],
+)
 
 
 @router.get("/requests-by-module", response_model=None)

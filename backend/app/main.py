@@ -7,12 +7,14 @@ from app.core.database import Base, engine
 from app.core.error_handlers import register_error_handlers
 from app.core.limiter import limiter
 from app.modules.audit.models import AuditLog  # noqa: F401 
+from app.modules.auth.models import AdminUser  # noqa: F401
 from app.modules.exif.router import router as exif_router
 from app.modules.hash.router import router as hash_router
 from app.modules.mime.router import router as mime_router
 from app.modules.compare.router import router as compare_router
 from app.modules.clean.router import router as clean_router
 from app.modules.stats.router import router as stats_router
+from app.modules.auth.router import router as auth_router
 
 
 # Limite de pixeles para evitar "bombas de imagen" 
@@ -41,7 +43,7 @@ app.include_router(mime_router)
 app.include_router(compare_router)
 app.include_router(clean_router)
 app.include_router(stats_router)
-
+app.include_router(auth_router)
 
 @app.get("/health", tags=["Health"])
 async def health_check():
