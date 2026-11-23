@@ -32,3 +32,7 @@ class UnauthorizedError(AppError):
     status_code = 401
     code = "UNAUTHORIZED"
 
+
+class ConflictError(AppError):
+    status_code = 409
+    code = "USERNAME_TAKEN"

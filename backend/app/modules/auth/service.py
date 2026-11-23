@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
 from app.core.database import get_db
-from app.core.exceptions import UnauthorizedError
+from app.core.exceptions import ConflictError, UnauthorizedError
 from app.modules.auth.repository import crear_admin, contar_admins, obtener_admin_por_username
 from app.modules.auth.schemas import CreateAdminRequest, LoginRequest
 
@@ -71,6 +71,17 @@ async def configurar_primer_admin(db: AsyncSession, datos: CreateAdminRequest, c
 
     if await contar_admins(db) > 0:
         raise UnauthorizedError("Ya existe un administrador, este endpoint ya no está disponible")
+
+    password_hash = hashear_password(datos.password)
+    await crear_admin(db, datos.username, password_hash)
+
+    return {"username": datos.username, "mensaje": "Administrador creado correctamente"}
+
+
+async def crear_admin_adicional(db: AsyncSession, datos: CreateAdminRequest) -> dict:
+    existente = await obtener_admin_por_username(db, datos.username)
+    if existente is not None:
+        raise ConflictError("Ya existe un administrador con ese nombre de usuario")
 
     password_hash = hashear_password(datos.password)
     await crear_admin(db, datos.username, password_hash)
