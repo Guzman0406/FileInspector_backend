@@ -29,6 +29,7 @@ Muchos archivos que se comparten a diario (fotos, documentos) contienen metadato
 ## Tecnologías Utilizadas
 * **Backend:** Python 3.11, FastAPI, Pydantic v2
 * **Base de Datos:** PostgreSQL 16 + SQLAlchemy 2 (async) + asyncpg
+* **Autenticación:** JWT (python-jose) y hash de contraseñas con bcrypt (passlib)
 * **Procesamiento de archivos:** Pillow, piexif, pillow-heif, python-magic, filetype
 * **Infraestructura:** Docker y Docker Compose
 * **Control de Versiones:** Git y GitHub
@@ -43,9 +44,15 @@ cd Fileinspector
 ```
 
 ### Configurar variables de entorno
-Dentro de `backend/`, crea un archivo `.env` con la conexión a la base de datos:
+Dentro de `backend/`, crea un archivo `.env` con la conexión a la base de datos y las claves de seguridad:
 ```bash
 DATABASE_URL=postgresql+asyncpg://fileinspector:fileinspector_dev_pass@db:5432/fileinspector_db
+JWT_SECRET_KEY=<clave-secreta>
+ADMIN_SETUP_KEY=<otra-clave-secreta>
+```
+Genera cada clave con:
+```bash
+python3 -c "import secrets; print(secrets.token_hex(32))"
 ```
 
 ### Levantar el proyecto con Docker
