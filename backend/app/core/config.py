@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     jwt_secret_key: str
     jwt_algorithm: str = "HS256"
     jwt_expire_minutes: int = 60
-
+    
+    admin_setup_key: str
 
 settings = Settings()

@@ -8,8 +8,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import settings
 from app.core.database import get_db
 from app.core.exceptions import UnauthorizedError
-from app.modules.auth.repository import obtener_admin_por_username
-from app.modules.auth.schemas import LoginRequest
+from app.modules.auth.repository import crear_admin, contar_admins, obtener_admin_por_username
+from app.modules.auth.schemas import CreateAdminRequest, LoginRequest
 
 contexto_hash = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -64,3 +64,15 @@ async def obtener_admin_actual(
         raise UnauthorizedError("El usuario del token ya no existe")
 
     return admin
+
+async def configurar_primer_admin(db: AsyncSession, datos: CreateAdminRequest, clave_setup: str) -> dict:
+    if clave_setup != settings.admin_setup_key:
+        raise UnauthorizedError("Clave de configuración incorrecta")
+
+    if await contar_admins(db) > 0:
+        raise UnauthorizedError("Ya existe un administrador, este endpoint ya no está disponible")
+
+    password_hash = hashear_password(datos.password)
+    await crear_admin(db, datos.username, password_hash)
+
+    return {"username": datos.username, "mensaje": "Administrador creado correctamente"}

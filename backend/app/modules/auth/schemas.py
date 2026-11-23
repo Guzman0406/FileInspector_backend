@@ -10,3 +10,8 @@ class LoginResponseData(BaseModel):
     access_token: str
     token_type: str = "bearer"
     expires_in_minutes: int
+
+
+class CreateAdminRequest(BaseModel):
+    username: str = Field(..., description="Nombre de usuario del nuevo administrador")
+    password: str = Field(..., description="Contraseña del nuevo administrador")
