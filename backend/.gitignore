@@ -3,3 +3,4 @@ __pycache__/
 *.pyc
 .venv/
 repomix-output.xml
+fileinspector-documentacion-completa.pdf
